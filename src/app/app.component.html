@@ -2,56 +2,66 @@
   A* Path Finding
 </h1>
 
-<form
-  class="w-50 p-2"
-  [formGroup]="generationOptForm"
-  (ngSubmit)="onGenrationOptSubmit()"
->
-  <div class="row">
-    <div class="col-6 form-group">
-      <label>Width</label>
-      <input
-        class="form-control"
-        type="text"
-        placeholder="Width"
-        formControlName="col"
-      />
-    </div>
-
-    <div class="col-6 form-group">
-      <label>Height</label>
-      <input
-        class="form-control"
-        type="text"
-        placeholder="Height"
-        formControlName="row"
-      />
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label>Obstacle density</label>
-    <input
-      class="form-control"
-      type="text"
-      placeholder="Obstacle Density"
-      formControlName="obstacleDensity"
-    />
-  </div>
-  <div class="form-check">
-    <input
-      type="checkbox"
-      class="form-check-input"
-      id="exampleCheck1"
-      formControlName="allowDiagonalMove"
-    />
-    <label class="form-check-label" for="exampleCheck1"
-      >Allow diagonal move?</label
+<div class="row">
+  <div class="col-6">
+    <form
+      class="p-2"
+      [formGroup]="generationOptForm"
+      (ngSubmit)="onGenrationOptSubmit()"
     >
-  </div>
+      <div class="row">
+        <div class="col-6 form-group">
+          <label>Width</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Width"
+            formControlName="col"
+          />
+        </div>
 
-  <button type="submit" class="btn btn-primary">Generate</button>
-</form>
+        <div class="col-6 form-group">
+          <label>Height</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Height"
+            formControlName="row"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Obstacle density</label>
+        <input
+          class="form-control"
+          type="text"
+          placeholder="Obstacle Density"
+          formControlName="obstacleDensity"
+        />
+      </div>
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="exampleCheck1"
+          formControlName="allowDiagonalMove"
+        />
+        <label class="form-check-label" for="exampleCheck1"
+          >Allow diagonal move?</label
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary">Generate</button>
+    </form>
+  </div>
+  <!-- <div class="col-6">
+    <div class="card border-info" style="max-width: 18rem;">
+      <div class="card-header">Note</div>
+      <div class="card-body text-info"></div>
+    </div>
+  </div> -->
+</div>
 
 <div class="d-flex p-1">
   <button type="submit" class="btn btn-primary" (click)="findPath()">
