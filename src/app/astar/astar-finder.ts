@@ -115,6 +115,7 @@ export class AStarFinder {
 
       // Get neighbors, already filterd non-walkable position
       let neighbors = this.grid.getNeighbors(currentNode.position, this.diagonalAllowed);
+      console.log(this.diagonalAllowed);
       const exploring = [];
       // Loop through all the neighbors
       for (let i = 0; i < neighbors.length; i++) {

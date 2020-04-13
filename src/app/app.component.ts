@@ -96,7 +96,7 @@ export class AppComponent implements OnInit {
 
   findPath() {
 
-    const allowDiagonalMove = this.generationOptForm.value;
+    const { allowDiagonalMove } = this.generationOptForm.value;
     console.log('diagoinal');
     console.log(allowDiagonalMove);
     const finder = new AStarFinder(this.grid, allowDiagonalMove);
