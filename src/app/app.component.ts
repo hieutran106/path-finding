@@ -19,12 +19,23 @@ export class AppComponent implements OnInit {
   // save position due to angular loop in template
   col: number[];
   row: number[];
-  constructor(private fb: FormBuilder, private changeDetectorRef: ChangeDetectorRef) {
 
-  }
   results: FindingState[] = [];
 
   displayedGrid: number[][];
+
+  animationInterval: any;
+
+  backtrace = [];
+  backTraceAnimationInterval: any;
+  backtraceAnimationIndex = -1;
+  startAnimationIndex = -1;
+
+
+  constructor(private fb: FormBuilder, private changeDetectorRef: ChangeDetectorRef) {
+
+  }
+
   ngOnInit() {
     this.buildForm();
     this.onGenrationOptSubmit();
@@ -32,42 +43,45 @@ export class AppComponent implements OnInit {
 
   private buildForm() {
     const defaultValue = {
-      col: 15,
-      row: 15,
+      col: 20,
+      row: 10,
+      allowDiagonalMove: false,
       obstacleDensity: 0.2
     };
-    const { col, row, obstacleDensity } = defaultValue;
+    const { col, row, obstacleDensity, allowDiagonalMove } = defaultValue;
     this.generationOptForm = this.fb.group({
       col: [col, Validators.required],
       row: [row, Validators.required],
+      allowDiagonalMove: [allowDiagonalMove, Validators.required],
       obstacleDensity: [obstacleDensity, Validators.required]
     });
   }
   onGenrationOptSubmit() {
-    let { col, row, obstacleDensity } = this.generationOptForm.value;
+    let { col, row, obstacleDensity, allowDiagonalMove } = this.generationOptForm.value;
 
     col = parseInt(col, 10);
     row = parseInt(row, 10);
-    console.log(col, row, obstacleDensity);
+
+    console.log(col, row, obstacleDensity, allowDiagonalMove);
     // fixed data
 
-    let matrix = [
-      [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-      [1, 0, 1, 0, 0, 0, 0, 1, 0, 0],
-      [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-      [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ];
+    // let matrix = [
+    //   [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+    //   [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    //   [1, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+    //   [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+    //   [0, 0, 1, 0, 0, 1, 0, 0, 0, 0],
+    //   [0, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+    //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    // ];
 
-    this.grid = new Grid(matrix);
+    // this.grid = new Grid(matrix);
 
-    // this.grid = new Grid({
-    //   col,
-    //   row,
-    //   densityOfObstacles: obstacleDensity
-    // });
+    this.grid = new Grid({
+      col,
+      row,
+      densityOfObstacles: obstacleDensity
+    });
 
 
     this.col = Array(this.grid.col).fill(null).map((x, i) => i);
@@ -75,14 +89,17 @@ export class AppComponent implements OnInit {
 
     console.log(this.row.length);
     console.log(this.col.length);
-    this.results = [];
+    this.resetAnimation();
   }
 
 
 
   findPath() {
 
-    const finder = new AStarFinder(this.grid, true);
+    const allowDiagonalMove = this.generationOptForm.value;
+    console.log('diagoinal');
+    console.log(allowDiagonalMove);
+    const finder = new AStarFinder(this.grid, allowDiagonalMove);
     this.results = finder.findPath(this.grid.start, this.grid.goal);
     if (this.results.length === 0 || this.results[this.results.length - 1].hasReachedGoal === false) {
       alert('Path cannot be found');
@@ -98,11 +115,7 @@ export class AppComponent implements OnInit {
 
   }
 
-  animationInterval: any;
 
-  backtrace = [];
-  backTraceAnimationInterval: any;
-  backtraceAnimationIndex = -1;
 
   findPathNext() {
 
@@ -119,11 +132,11 @@ export class AppComponent implements OnInit {
       }, 100)
     }
   }
-  startAnimationIndex = -1;
+
 
 
   showBackTrace() {
-    if (this.backtraceAnimationIndex < this.backtrace.length - 1) {
+    if (this.backtraceAnimationIndex < this.backtrace.length) {
       this.backtraceAnimationIndex++;
       this.changeDetectorRef.detectChanges();
     } else {
@@ -166,5 +179,12 @@ export class AppComponent implements OnInit {
     }
 
     return result;
+  }
+  private resetAnimation() {
+    this.backtrace = [];
+    this.backtraceAnimationIndex = -1;
+    this.startAnimationIndex = -1;
+    this.results = [];
+
   }
 }

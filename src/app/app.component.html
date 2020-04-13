@@ -1,52 +1,50 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align: center;">
-  <h1>
-    Test heading
-  </h1>
-</div>
-<h2>Demo:</h2>
+<h1 class="p-2">
+  A* Path Finding
+</h1>
 
 <form [formGroup]="generationOptForm" (ngSubmit)="onGenrationOptSubmit()">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <div class="form-group">
-          <label>Width</label>
-          <input
-            class="form-control"
-            type="text"
-            placeholder="Width"
-            formControlName="col"
-          />
-        </div>
-      </div>
-      <div class="col-sm">
-        <div class="form-group">
-          <label>Height</label>
-          <input
-            class="form-control"
-            type="text"
-            placeholder="Height"
-            formControlName="row"
-          />
-        </div>
-      </div>
-      <div class="col-sm">
-        <div class="form-group">
-          <label>Obstacle density</label>
-          <input
-            class="form-control"
-            type="text"
-            placeholder="Obstacle Density"
-            formControlName="obstacleDensity"
-          />
-        </div>
-      </div>
-      <div class="col-sm">
-        <button type="submit" class="btn btn-light">Generate</button>
-      </div>
-    </div>
+  <div class="form-group">
+    <label>Width</label>
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Width"
+      formControlName="col"
+    />
   </div>
+
+  <div class="form-group">
+    <label>Height</label>
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Height"
+      formControlName="row"
+    />
+  </div>
+
+  <div class="form-group">
+    <label>Obstacle density</label>
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Obstacle Density"
+      formControlName="obstacleDensity"
+    />
+  </div>
+  <div class="form-check">
+    <input
+      type="checkbox"
+      class="form-check-input"
+      id="exampleCheck1"
+      formControlName="allowDiagonalMove"
+    />
+    <label class="form-check-label" for="exampleCheck1"
+      >Allow diagonal move?</label
+    >
+  </div>
+
+  <button type="submit" class="btn btn-light">Generate</button>
 </form>
 
 <div class="d-flex p-1">
@@ -64,10 +62,8 @@
   </button>
 </div>
 
-<table class="grid d-flex justify-content-center">
+<table>
   <tr *ngFor="let x of row">
-    <td *ngFor="let y of col" [ngClass]="getTileClasses(x, y)">
-      <!-- {{ getTileString(x, y) }} -->
-    </td>
+    <td *ngFor="let y of col" [ngClass]="getTileClasses(x, y)"></td>
   </tr>
 </table>
