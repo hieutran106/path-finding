@@ -1,0 +1,70 @@
+<div style="text-align: center;">
+  <h1>
+    Test heading
+  </h1>
+</div>
+<h2>Demo:</h2>
+
+<form [formGroup]="generationOptForm" (ngSubmit)="onGenrationOptSubmit()">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <div class="form-group">
+          <label>Width</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Width"
+            formControlName="col"
+          />
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label>Height</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Height"
+            formControlName="row"
+          />
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="form-group">
+          <label>Obstacle density</label>
+          <input
+            class="form-control"
+            type="text"
+            placeholder="Obstacle Density"
+            formControlName="obstacleDensity"
+          />
+        </div>
+      </div>
+      <div class="col-sm">
+        <button type="submit" class="btn btn-light">Generate</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="d-flex p-1">
+  <button type="submit" class="btn btn-primary" (click)="findPath()">
+    Find Path
+  </button>
+  <button type="button" class="btn btn-primary" (click)="findPathGenerator()">
+    Find Path Generator
+  </button>
+  <button type="button" class="btn btn-primary" (click)="findPathPrev()">
+    Prev
+  </button>
+  <button type="button" class="btn btn-primary" (click)="findPathNext()">
+    Next
+  </button>
+</div>
+
+<table class="grid d-flex justify-content-center">
+  <tr *ngFor="let x of row">
+    <app-tile *ngFor="let y of col"></app-tile>
+  </tr>
+</table>
