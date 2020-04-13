@@ -1,3 +1,4 @@
+<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align: center;">
   <h1>
     Test heading
@@ -65,6 +66,8 @@
 
 <table class="grid d-flex justify-content-center">
   <tr *ngFor="let x of row">
-    <app-tile *ngFor="let y of col"></app-tile>
+    <td *ngFor="let y of col" [ngClass]="getTileClasses(x, y)">
+      <!-- {{ getTileString(x, y) }} -->
+    </td>
   </tr>
 </table>
