@@ -12,7 +12,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AppComponent implements OnInit {
   title = 'A* Demo';
-  generationOptForm: FormGroup;
+  mapOptForm: FormGroup;
+  algOptForm: FormGroup;
 
   grid: Grid;
 
@@ -44,23 +45,28 @@ export class AppComponent implements OnInit {
 
   private buildForm() {
     const defaultValue = {
-      col: 20,
-      row: 10,
+      col: 30,
+      row: 25,
       allowDiagonalMove: false,
       obstacleDensity: 0.2,
-      heuristicFunction: 'Euclidean'
+      heuristicFunction: 'Euclidean',
+      setPoint: 'start'
     };
-    const { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction } = defaultValue;
-    this.generationOptForm = this.fb.group({
+    const { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction, setPoint } = defaultValue;
+    this.mapOptForm = this.fb.group({
       col: [col, Validators.required],
       row: [row, Validators.required],
+      obstacleDensity: [obstacleDensity, Validators.required]
+    });
+
+    this.algOptForm = this.fb.group({
+      setPoint: [setPoint, Validators.required],
       heuristicFunction: [heuristicFunction, Validators.required],
       allowDiagonalMove: [allowDiagonalMove, Validators.required],
-      obstacleDensity: [obstacleDensity, Validators.required]
     });
   }
   onGenrationOptSubmit() {
-    let { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction } = this.generationOptForm.value;
+    let { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction } = this.mapOptForm.value;
 
     col = parseInt(col, 10);
     row = parseInt(row, 10);
@@ -99,7 +105,7 @@ export class AppComponent implements OnInit {
 
   findPath() {
     this.disabledFindPathBtn = true;
-    const { allowDiagonalMove, heuristicFunction } = this.generationOptForm.value;
+    const { allowDiagonalMove, heuristicFunction } = this.mapOptForm.value;
     console.log('diagoinal');
     console.log(allowDiagonalMove);
     const finder = new AStarFinder(this.grid, allowDiagonalMove, heuristicFunction);
@@ -152,7 +158,9 @@ export class AppComponent implements OnInit {
 
 
   getTileClasses(x, y) {
+
     const result = [];
+    const { setPoint } = this.algOptForm.value;
     if (this.grid.start[0] === x && this.grid.start[1] === y) {
       result.push('start');
     } else if (this.grid.goal[0] === x && this.grid.goal[1] === y) {
@@ -161,6 +169,12 @@ export class AppComponent implements OnInit {
 
     if (!this.grid.getTileAt([x, y]).isWalkable) {
       result.push('obstacle')
+    }
+
+    if (setPoint === 'start') {
+      result.push('start-hover')
+    } else {
+      result.push('goal-hover')
     }
 
     if (this.startAnimationIndex !== -1) {
@@ -184,6 +198,14 @@ export class AppComponent implements OnInit {
     }
 
     return result;
+  }
+  tileOnClickHandler(x, y) {
+    const { setPoint } = this.algOptForm.value;
+    if (setPoint === 'start') {
+      this.grid.setStart([x, y]);
+    } else {
+      this.grid.setGoal([x, y]);
+    }
   }
   private resetAnimation() {
     this.backtrace = [];

@@ -54,3 +54,10 @@ td {
     background-color: #ef535399;
   }
 }
+
+.goal-hover {
+  &:hover {
+    cursor: pointer;
+    background-color: #5151f7a6;
+  }
+}
