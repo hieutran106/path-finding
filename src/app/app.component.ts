@@ -31,7 +31,8 @@ export class AppComponent implements OnInit {
   backtraceAnimationIndex = -1;
   startAnimationIndex = -1;
 
-
+  // ui
+  disabledFindPathBtn = false;
   constructor(private fb: FormBuilder, private changeDetectorRef: ChangeDetectorRef) {
 
   }
@@ -46,23 +47,25 @@ export class AppComponent implements OnInit {
       col: 20,
       row: 10,
       allowDiagonalMove: false,
-      obstacleDensity: 0.2
+      obstacleDensity: 0.2,
+      heuristicFunction: 'Euclidean'
     };
-    const { col, row, obstacleDensity, allowDiagonalMove } = defaultValue;
+    const { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction } = defaultValue;
     this.generationOptForm = this.fb.group({
       col: [col, Validators.required],
       row: [row, Validators.required],
+      heuristicFunction: [heuristicFunction, Validators.required],
       allowDiagonalMove: [allowDiagonalMove, Validators.required],
       obstacleDensity: [obstacleDensity, Validators.required]
     });
   }
   onGenrationOptSubmit() {
-    let { col, row, obstacleDensity, allowDiagonalMove } = this.generationOptForm.value;
+    let { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction } = this.generationOptForm.value;
 
     col = parseInt(col, 10);
     row = parseInt(row, 10);
 
-    console.log(col, row, obstacleDensity, allowDiagonalMove);
+    console.log(col, row, obstacleDensity, allowDiagonalMove, heuristicFunction);
     // fixed data
 
     // let matrix = [
@@ -80,7 +83,7 @@ export class AppComponent implements OnInit {
     this.grid = new Grid({
       col,
       row,
-      densityOfObstacles: obstacleDensity
+      densityOfObstacles: obstacleDensity,
     });
 
 
@@ -95,14 +98,15 @@ export class AppComponent implements OnInit {
 
 
   findPath() {
-
-    const { allowDiagonalMove } = this.generationOptForm.value;
+    this.disabledFindPathBtn = true;
+    const { allowDiagonalMove, heuristicFunction } = this.generationOptForm.value;
     console.log('diagoinal');
     console.log(allowDiagonalMove);
-    const finder = new AStarFinder(this.grid, allowDiagonalMove);
+    const finder = new AStarFinder(this.grid, allowDiagonalMove, heuristicFunction);
     this.results = finder.findPath(this.grid.start, this.grid.goal);
     if (this.results.length === 0 || this.results[this.results.length - 1].hasReachedGoal === false) {
       alert('Path cannot be found');
+      this.disabledFindPathBtn = false;
       return;
     }
 
@@ -141,6 +145,7 @@ export class AppComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     } else {
       clearInterval(this.backTraceAnimationInterval);
+      this.disabledFindPathBtn = false;
     }
   }
 

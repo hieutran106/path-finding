@@ -7,11 +7,11 @@ export enum TileType {
   EMPTY, START, GOAL, OBSTACLE, CURRENT, EXPLORING, EXPLORED
 }
 
-export function calculateHeuristic(from: Position, to: Position, diagonalAllowed: boolean = true) {
+export function calculateHeuristic(from: Position, to: Position, type: 'Euclidean' | 'Manhattan' = 'Euclidean') {
   let dx = Math.abs(from[0] - to[0]);
   let dy = Math.abs(from[1] - to[1]);
 
-  return diagonalAllowed ? Math.max(dx, dy) : dx + dy;
+  return type === 'Euclidean' ? Math.sqrt(dx * dx + dy * dy) : dx + dy;
 }
 
 
@@ -23,7 +23,7 @@ export interface FindingState {
 
 export class AStarFinder {
 
-  constructor(public grid: Grid, private diagonalAllowed: boolean = true) {
+  constructor(public grid: Grid, private diagonalAllowed: boolean = true, private heuristicFunction: any) {
 
   }
 
@@ -90,14 +90,13 @@ export class AStarFinder {
           // tile.isOnClosedList = true;
           // closedList.push(tile);
         } else {
-          const hValue = calculateHeuristic(tile.position, end)
+          const hValue = calculateHeuristic(tile.position, end, this.heuristicFunction);
           tile.setHValue(hValue)
         }
       }
     }
 
     // Loop until open list is empty
-    let test = 0;
     while (openList.size() !== 0) {
 
       let currentNode = openList.extractRoot();
@@ -128,7 +127,8 @@ export class AStarFinder {
         }
 
         // calculate the G value of the neighbor
-        const distance = (Math.abs(currentNode.xPos - neighbor.xPos) + Math.abs(currentNode.yPos - neighbor.yPos)) === 2 ? 1.41421 : 1;
+        //const distance = (Math.abs(currentNode.xPos - neighbor.xPos) + Math.abs(currentNode.yPos - neighbor.yPos)) === 2 ? 1.41421 : 1;
+        const distance = 1;
         const nextGValue = currentNode.gValue + distance;
 
 

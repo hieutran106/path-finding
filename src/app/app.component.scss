@@ -30,7 +30,7 @@ td {
     height: 20px;
     content: "";
     border-radius: 50%;
-    background-color: red;
+    background-color: #e62020;
     transform: translate(-50%, -50%);
   }
 }
@@ -45,5 +45,12 @@ td {
     border-radius: 50%;
     background-color: blue;
     transform: translate(-50%, -50%);
+  }
+}
+
+.start-hover {
+  &:hover {
+    cursor: pointer;
+    background-color: #ef535399;
   }
 }
