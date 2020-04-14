@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
     const defaultValue = {
       col: 30,
       row: 25,
-      allowDiagonalMove: false,
+      allowDiagonalMove: true,
       obstacleDensity: 0.2,
       heuristicFunction: 'Euclidean',
       setPoint: 'start'
@@ -64,14 +64,23 @@ export class AppComponent implements OnInit {
       heuristicFunction: [heuristicFunction, Validators.required],
       allowDiagonalMove: [allowDiagonalMove, Validators.required],
     });
+
+    this.algOptForm.controls['allowDiagonalMove'].valueChanges.subscribe(value => {
+      console.log(value);
+      if (!value) {
+        this.algOptForm.patchValue({
+          heuristicFunction: 'Manhattan'
+        })
+      }
+    })
   }
   onGenrationOptSubmit() {
-    let { col, row, obstacleDensity, allowDiagonalMove, heuristicFunction } = this.mapOptForm.value;
+    let { col, row, obstacleDensity } = this.mapOptForm.value;
 
     col = parseInt(col, 10);
     row = parseInt(row, 10);
 
-    console.log(col, row, obstacleDensity, allowDiagonalMove, heuristicFunction);
+    
     // fixed data
 
     // let matrix = [
@@ -96,8 +105,6 @@ export class AppComponent implements OnInit {
     this.col = Array(this.grid.col).fill(null).map((x, i) => i);
     this.row = Array(this.grid.row).fill(null).map((x, i) => i);
 
-    console.log(this.row.length);
-    console.log(this.col.length);
     this.resetAnimation();
   }
 
@@ -105,7 +112,7 @@ export class AppComponent implements OnInit {
 
   findPath() {
     this.disabledFindPathBtn = true;
-    const { allowDiagonalMove, heuristicFunction } = this.mapOptForm.value;
+    const { allowDiagonalMove, heuristicFunction } = this.algOptForm.value;
     console.log('diagoinal');
     console.log(allowDiagonalMove);
     const finder = new AStarFinder(this.grid, allowDiagonalMove, heuristicFunction);
